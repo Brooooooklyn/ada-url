@@ -1,0 +1,15 @@
+[package]
+name = "ada-js"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ada-url = { version = "0.1.0", path = "../ada" }
+napi = { version = "2", default-features = false, features = ["napi3"] }
+napi-derive = { version = "2", default-features = false, features = ["type-def"] }
+
+[build-dependencies]
+napi-build = "2"

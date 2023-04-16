@@ -1,0 +1,17 @@
+[package]
+name = "ada-url"
+version = "0.1.0"
+edition = "2021"
+
+
+[[bench]]
+name = "parse"
+path = "bench/parse.rs"
+
+[dependencies]
+
+[dev-dependencies]
+url = "2"
+
+[build-dependencies]
+cc = "1"
