@@ -9,6 +9,8 @@ name = "parse"
 path = "bench/parse.rs"
 
 [dependencies]
+anyhow = "1"
+thiserror = "1"
 
 [dev-dependencies]
 url = "2"

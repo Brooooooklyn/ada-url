@@ -1,5 +1,7 @@
 use std::ptr;
 
+use thiserror::Error;
+
 mod ffi {
     use std::ffi::c_char;
 
@@ -10,15 +12,25 @@ mod ffi {
 
     extern "C" {
         pub fn parse(url: *const c_char, length: usize, url_aggregator: *mut *mut ada_url) -> bool;
+        pub fn delete_url(url_aggregator: *mut ada_url);
     }
 }
 
 #[repr(transparent)]
 pub struct Url(*mut ffi::ada_url);
 
-#[derive(Debug)]
+impl Drop for Url {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::delete_url(self.0);
+        }
+    }
+}
+
+#[derive(Error, Debug)]
 pub enum Error {
-    ParseUrl,
+    #[error("Invalid url: \"{0}\"")]
+    ParseUrl(String),
 }
 
 pub fn parse<U: AsRef<str>>(url: U) -> Result<Url, Error> {
@@ -33,7 +45,7 @@ pub fn parse<U: AsRef<str>>(url: U) -> Result<Url, Error> {
     } {
         Ok(Url(url_aggregator))
     } else {
-        Err(Error::ParseUrl)
+        Err(Error::ParseUrl(url.as_ref().to_owned()))
     }
 }
 
